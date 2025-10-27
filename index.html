@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kushtia Population Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .slide-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 1200px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #764ba2;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #667eea;
+            margin: 25px 0 15px 0;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #555;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .chart-container {
+            margin: 40px 0;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 300px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .bar {
+            flex: 1;
+            margin: 0 10px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+            animation: growUp 1s ease-out;
+        }
+
+        @keyframes growUp {
+            from {
+                height: 0;
+            }
+        }
+
+        .bar:hover {
+            filter: brightness(1.2);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #333;
+            width: 100px;
+            text-align: center;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .solution-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .solution-card:hover {
+            transform: scale(1.05);
+        }
+
+        .solution-card h4 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .solution-card p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .challenges-list {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .challenges-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .challenges-list li {
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .challenges-list li:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateX(10px);
+        }
+
+        .challenges-list li:before {
+            content: "⚠️";
+            margin-right: 15px;
+            font-size: 1.3em;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 0 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .slide-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: white;
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #f5576c;
+        }
+
+        .highlight p {
+            font-size: 1.2em;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 20px;
+            text-align: left;
+            font-size: 1.1em;
+        }
+
+        tbody tr {
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background: #e9ecef;
+            transform: scale(1.02);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Title Slide -->
+    <div class="slide" id="slide1">
+        <div class="slide-content">
+            <h1>🏙️ KUSHTIA DISTRICT</h1>
+            <h2>Population Growth Analysis & Solutions</h2>
+            <p class="subtitle">A Comprehensive Report on Demographic Trends</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="icon">👥</span>
+                    <div class="stat-number">2.15M</div>
+                    <div class="stat-label">Current Population (2022)</div>
+                </div>
+                <div class="stat-card">
+                    <span class="icon">📊</span>
+                    <div class="stat-number">1,336</div>
+                    <div class="stat-label">People per km²</div>
+                </div>
+                <div class="stat-card">
+                    <span class="icon">🏘️</span>
+                    <div class="stat-number">565,339</div>
+                    <div class="stat-label">Households</div>
+                </div>
+                <div class="stat-card">
+                    <span class="icon">📈</span>
+                    <div class="stat-number">+2.19%</div>
+                    <div class="stat-label">Annual Growth Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Population Trends -->
+    <div class="slide hidden" id="slide2">
+        <div class="slide-content">
+            <h2>📈 Population Growth Trends</h2>
+            <div class="chart-container">
+                <h3>Historical Population Data</h3>
+                <div class="bar-chart">
+                    <div class="bar" style="height: 65%;">
+                        <span class="bar-value">1.74M</span>
+                        <span class="bar-label">2001</span>
+                    </div>
+                    <div class="bar" style="height: 80%;">
+                        <span class="bar-value">1.95M</span>
+                        <span class="bar-label">2011</span>
+                    </div>
+                    <div class="bar" style="height: 90%;">
+                        <span class="bar-value">2.17M</span>
+                        <span class="bar-label">2016</span>
+                    </div>
+                    <div class="bar" style="height: 100%;">
+                        <span class="bar-value">2.15M</span>
+                        <span class="bar-label">2022</span>
+                    </div>
+                </div>
+            </div>
+            <div class="highlight">
+                <p><strong>Key Insight:</strong> Kushtia has experienced steady population growth over the past two decades, with an average annual growth rate of 2.19% between 2011-2016, which is higher than the national average.</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Growth Rate</th>
+                        <th>Population</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1951-1991</td>
+                        <td>+1.33%/year</td>
+                        <td>Steady Growth</td>
+                    </tr>
+                    <tr>
+                        <td>1991-2001</td>
+                        <td>+1.48%/year</td>
+                        <td>1.74 Million</td>
+                    </tr>
+                    <tr>
+                        <td>2001-2011</td>
+                        <td>+1.13%/year</td>
+                        <td>1.95 Million</td>
+                    </tr>
+                    <tr>
+                        <td>2011-2016</td>
+                        <td>+2.19%/year</td>
+                        <td>2.17 Million</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Slide 3: Demographics -->
+    <div class="slide hidden" id="slide3">
+        <div class="slide-content">
+            <h2>👨‍👩‍👧‍👦 Demographic Breakdown</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="icon">👶</span>
+                    <div class="stat-number">16.89%</div>
+                    <div class="stat-label">Under 10 Years</div>
+                </div>
+                <div class="stat-card">
+                    <span class="icon">🏙️</span>
+                    <div class="stat-number">21.26%</div>
+                    <div class="stat-label">Urban Population</div>
+                </div>
+                <div class="stat-card">
+                    <span class="icon">📚</span>
+                    <div class="stat-number">69.01%</div>
+                    <div class="stat-label">Literacy Rate</div>
+                </div>
+                <div class="stat-card">
+                    <span class="icon">👫</span>
+                    <div class="stat-number">3.77</div>
+                    <div class="stat-label">People per Household</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>Population Distribution</h3>
+                <div class="bar-chart">
+                    <div class="bar" style="height: 80%; background: linear-gradient(to top, #4facfe, #00f2fe);">
+                        <span class="bar-value">78.74%</span>
+                        <span class="bar-label">Rural Areas</span>
+                    </div>
+                    <div class="bar" style="height: 40%; background: linear-gradient(to top, #43e97b, #38f9d7);">
+                        <span class="bar-value">21.26%</span>
+                        <span class="bar-label">Urban Areas</span>
+                    </div>
+                </div>
+            </div>
+            <div class="highlight">
+                <p><strong>Notable Facts:</strong> Sex ratio stands at 1036 females per 1000 males. The district has 565,339 households with an average of 3.77 people per household, indicating close-knit family structures.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Challenges -->
+    <div class="slide hidden" id="slide4">
+        <div class="slide-content">
+            <h2>⚠️ Challenges of Population Growth</h2>
+            <div class="challenges-list">
+                <ul>
+                    <li><strong>Infrastructure Pressure:</strong> Increasing demand for housing, transportation, and utilities</li>
+                    <li><strong>Resource Scarcity:</strong> Limited water supply and agricultural land per capita</li>
+                    <li><strong>Healthcare Strain:</strong> Need for more medical facilities and healthcare professionals</li>
+                    <li><strong>Education Gap:</strong> Literacy rate (69.01%) below national average (74.80%)</li>
+                    <li><strong>Employment Issues:</strong> Job creation not keeping pace with population growth</li>
+                    <li><strong>Environmental Impact:</strong> Increased waste generation and pollution</li>
+                    <li><strong>Urban Migration:</strong> Rural-to-urban migration creating urban sprawl</li>
+                    <li><strong>Service Delivery:</strong> Difficulty in providing adequate public services</li>
+                </ul>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <span class="icon">🏥</span>
+                    <div class="stat-label">Healthcare Infrastructure Needs Expansion</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                    <span class="icon">🏫</span>
+                    <div class="stat-label">Educational Facilities Under Pressure</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Solutions -->
+    <div class="slide hidden" id="slide5">
+        <div class="slide-content">
+            <h2>💡 Strategic Solutions</h2>
+            <h3>Short-term Solutions (1-3 Years)</h3>
+            <div class="solution-grid">
+                <div class="solution-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <span class="icon">🏥</span>
+                    <h4>Healthcare Enhancement</h4>
+                    <p>Establish mobile health clinics, expand existing hospitals, and recruit more healthcare workers</p>
+                </div>
+                <div class="solution-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <span class="icon">📚</span>
+                    <h4>Education Programs</h4>
+                    <p>Launch adult literacy campaigns, build new schools, and improve teacher training programs</p>
+                </div>
+                <div class="solution-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <span class="icon">💧</span>
+                    <h4>Water & Sanitation</h4>
+                    <p>Improve water supply systems, establish water treatment plants, and enhance sanitation facilities</p>
+                </div>
+                <div class="solution-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <span class="icon">👨‍👩‍👧</span>
+                    <h4>Family Planning</h4>
+                    <p>Strengthen family planning services and awareness programs to manage population growth</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Long-term Solutions -->
+    <div class="slide hidden" id="slide6">
+        <div class="slide-content">
+            <h2>🎯 Long-term Strategic Solutions</h2>
+            <h3>Medium to Long-term (3-10 Years)</h3>
+            <div class="solution-grid">
+                <div class="solution-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <span class="icon">🏗️</span>
+                    <h4>Urban Planning</h4>
+                    <p>Develop smart city infrastructure, create satellite towns, and implement zoning regulations</p>
+                </div>
+                <div class="solution-card" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                    <span class="icon">💼</span>
+                    <h4>Employment Creation</h4>
+                    <p>Establish industrial zones, support SMEs, promote agro-processing, and develop IT parks</p>
+                </div>
+                <div class="solution-card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                    <span class="icon">🌾</span>
+                    <h4>Agricultural Innovation</h4>
+                    <p>Introduce modern farming techniques, vertical farming, and agricultural technology training</p>
+                </div>
+                <div class="solution-card" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                    <span class="icon">🚌</span>
+                    <h4>Transport System</h4>
+                    <p>Develop public transportation network, improve road infrastructure, and create cycling lanes</p>
+                </div>
+                <div class="solution-card" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                    <span class="icon">♻️</span>
+                    <h4>Sustainability</h4>
+                    <p>Implement waste management systems, promote renewable energy, and protect green spaces</p>
+                </div>
+                <div class="solution-card" style="background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);">
+                    <span class="icon">📱</span>
+                    <h4>Digital Services</h4>
+                    <p>Expand internet connectivity, develop e-governance platforms, and create digital literacy programs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Action Plan -->
+    <div class="slide hidden" id="slide7">
+        <div class="slide-content">
+            <h2>📋 Implementation Action Plan</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Action</th>
+                        <th>Timeline</th>
+                        <th>Responsibility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🔴 High</td>
+                        <td>Establish Community Health Centers</td>
+                        <td>6-12 months</td>
+                        <td>Health Dept</td>
+                    </tr>
+                    <tr>
+                        <td>🔴 High</td>
+                        <td>Improve Water Supply Infrastructure</td>
+                        <td>12-18 months</td>
+                        <td>DPHE</td>
+                    </tr>
+                    <tr>
+                        <td>🟡 Medium</td>
+                        <td>Build New Schools and Colleges</td>
+                        <td>2-3 years</td>
+                        <td>Education Dept</td>
+                    </tr>
+                    <tr>
+                        <td>🟡 Medium</td>
+                        <td>Develop Industrial Zones</td>
+                        <td>3-5 years</td>
+                        <td>BIDA</td>
+                    </tr>
+                    <tr>
+                        <td>🟢 Long-term</td>
+                        <td>Smart City Development</td>
+                        <td>5-10 years</td>
+                        <td>City Corporation</td>
+                    </tr>
+                    <tr>
+                        <td>🟢 Long-term</td>
+                        <td>Sustainable Agriculture Program</td>
+                        <td>Ongoing</td>
+                        <td>Agriculture Dept</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="highlight">
+                <p><strong>Success Factors:</strong> Inter-departmental cooperation, adequate funding allocation, community participation, regular monitoring and evaluation, and transparent governance are essential for successful implementation.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Conclusion -->
+    <div class="slide hidden" id="slide8">
+        <div class="slide-content">
+            <h2>🎯 Conclusion & Way Forward</h2>
+            <div class="stats-grid">
+                <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <span class="icon">🎯</span>
+                    <h4>Strategic Vision</h4>
+                    <p>Transform Kushtia into a sustainable, prosperous district</p>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <span class="icon">🤝</span>
+                    <h4>Collaboration</h4>
+                    <p>Public-private partnerships for effective implementation</p>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <span class="icon">📊</span>
+                    <h4>Monitoring</h4>
+                    <p>Regular assessment and adaptive management</p>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <span class="icon">🌟</span>
+                    <h4>Community Focus</h4>
+                    <p>Inclusive growth benefiting all residents</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <p><strong>Final Thoughts:</strong> Kushtia's population growth presents both challenges and opportunities. With strategic planning, adequate resources, and community engagement, the district can manage its growing population while improving quality of life for all residents. The key is sustainable development that balances economic growth, social welfare, and environmental protection.</p>
+            </div>
+            <h3 style="text-align: center; color: #667eea; margin-top: 40px;">Together, we can build a better Kushtia! 🌟</h3>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <!-- Slide Indicators -->
+    <div class="slide-indicator">
+        <span class="dot active" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+        <span class="dot" onclick="goToSlide(2)"></span>
+        <span class="dot" onclick="goToSlide(3)"></span>
+        <span class="dot" onclick="goToSlide(4)"></span>
+        <span class="dot" onclick="goToSlide(5)"></span>
+        <span class="dot" onclick="goToSlide(6)"></span>
+        <span class="dot" onclick="goToSlide(7)"></span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.add('hidden'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            if (n >= slides.length) currentSlide = 0;
+            if (n < 0) currentSlide = slides.length - 1;
+            
+            slides[currentSlide].classList.remove('hidden');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+            showSlide(currentSlide);
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
